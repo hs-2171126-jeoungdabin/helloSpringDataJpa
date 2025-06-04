@@ -8,9 +8,16 @@
 
 <body>
 <div class="container">
+  <div th:if="${param.success}" class="alert alert-success">
+    <span th:text="${param.success + '님, 로그인 축하합니다!'}"></span>
+</div>
+<div class="mb-3" sec:authorize="hasRole('ADMIN')">
+    <a class="btn btn-info" th:href="@{/admin/users}">Admin Page (User List)</a>
+  </div>
   <h1 class="mt-5">Product List</h1>
   <a class="btn btn-primary mb-3" th:href="@{/products/new}">Create New Product</a>
 
+  
   <table class="table table-bordered">
     <thead>
     <tr>

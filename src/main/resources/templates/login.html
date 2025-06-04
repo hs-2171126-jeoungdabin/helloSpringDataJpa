@@ -24,9 +24,16 @@
             <h1 class="text-center mb-4">로그인</h1>
 
             <form method="post" th:action="@{/login}">
-                <div th:if="${param.error}" class="alert alert-danger" role="alert">
-                    Invalid Email and Password.
+                <!-- <div th:if="${param.error != null}" class="alert alert-danger" role="alert"> -->
+                      <div th:if="${param.error}" class="alert alert-danger" role="alert">
+                    <span th:if="${session.SPRING_SECURITY_LAST_USERNAME != null}">
+                        <span th:text="${session.SPRING_SECURITY_LAST_USERNAME}"></span>님, 잘못된 정보입니다. 다시 시도해주세요.
+                    </span>
+                    <span th:unless="${session.SPRING_SECURITY_LAST_USERNAME != null}">
+                        아이디 또는 비밀번호가 올바르지 않습니다.
+                    </span>
                 </div>
+
 
                 <div th:if="${param.logout}" class="alert alert-info" role="alert">
                     Successfully logged out

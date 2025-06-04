@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:insert="~{common :: commonHead}">
+    <title>전체 사용자 리스트</title>
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-5">전체 사용자 리스트 </h1>
+    <p>Welcome to the Admin Area.</p>
+
+    <h2 class="mt-4">사용자 리스트</h2>
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>User ID</th>
+            <th>Email</th>
+            <th>Roles</th>
+            <!-- 필요한 다른 사용자 정보 컬럼 추가 -->
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${userList}">
+            <td th:text="${user.id}">1</td>
+            <td th:text="${user.email}">user@example.com</td>
+            <td>
+                <span th:each="role, iterStat : ${user.roles}"
+                      th:text="${role.rolename} + (${iterStat.last} ? '' : ', ')">ROLE_USER</span>
+            </td>
+            <!-- 다른 사용자 정보 표시 -->
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="mt-3">
+        <a th:href="@{/products}" class="btn btn-secondary">Back to Product List</a>
+    </div>
+</div>
+
+<div th:insert="~{common :: commonScript}"></div>
+</body>
+</html>

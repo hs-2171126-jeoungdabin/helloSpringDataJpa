@@ -5,9 +5,13 @@ import kr.ac.hansung.cse.hellospringdatajpa.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
+
 import java.util.List;
+
 
 @Controller
 @RequestMapping("/products")
@@ -43,17 +47,33 @@ public class ProductController {
         return "edit_product";
     }
 
-    // @ModelAttribute는  Form data (예: name=Laptop&brand=Samsung&madeIn=Korea&price=1000.00)를 Product 객체
-    // @RequestBody는 HTTP 요청 본문에 포함된
-    //  JSON 데이터(예: {"name": "Laptop", "brand": "Samsung", "madeIn": "Korea", "price": 1000.00})를 Product 객체에 매핑
-    @PostMapping("/save")
-    public String saveProduct(@ModelAttribute("product") Product product) {
 
-        service.save(product);
+@PostMapping("/save")
+public String saveProduct(@Valid @ModelAttribute("product") Product product, BindingResult result, Model model) {
 
-        return "redirect:/products";
+    if (result.hasErrors()) {
+        
+        if (product.getId() != null) { // 수정 상황
+            return "edit_product";
+        } else { // 신규 등록 상황
+            return "new_product"; 
+        }
     }
-
+    try {
+        service.save(product);
+      
+    } catch (Exception e) {
+      
+        model.addAttribute("errorMessage", "상품 저장 중 오류가 발생했습니다: " + e.getMessage());
+        // 오류 발생 시, 다시 폼으로 돌아가야 한다면
+        if (product.getId() != null) {
+            return "edit_product";
+        } else {
+            return "new_product";
+        }
+    }
+    return "redirect:/products";
+}
     @GetMapping("/delete/{id}")
     public String deleteProduct(@PathVariable(name = "id") Long id) {
 
